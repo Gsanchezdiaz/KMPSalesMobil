@@ -2,9 +2,12 @@ package com.gsanchez.kmpsalesmobil
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,21 +19,39 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import cafe.adriel.voyager.transitions.FadeTransition
+import cafe.adriel.voyager.transitions.ScaleTransition
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import kmpsalesmobil.composeapp.generated.resources.Res
 import kmpsalesmobil.composeapp.generated.resources.compose_multiplatform
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 @Composable
 @Preview
 fun App() {
     MaterialTheme {
-        var showWelcome: Boolean by remember { mutableStateOf(false) }
+        Navigator( screen = LoginScreen()) { navigator ->
+            FadeTransition(navigator)
+        }
+    }
+}
+
+class LoginScreen:Screen{
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
+        var showMensaje: Boolean by remember { mutableStateOf(false) }
         var username: String by remember { mutableStateOf("") }
         var password: String by remember { mutableStateOf("") }
 
@@ -56,21 +77,37 @@ fun App() {
                 visualTransformation = PasswordVisualTransformation()
 
             )
+            AnimatedVisibility(showMensaje) {
+                Text("debe ingresar su usuario o contraseña", fontSize = 11.sp, color = Color.Red)
+            }
             Spacer(modifier = Modifier.height(16.dp))
 
             Button( onClick = {
-                    if (username.isNotEmpty() && password.isNotEmpty())
-                        showWelcome = true
-                    }
-            ) {
-                    Text("Ingresar")
+                if (username.isNotEmpty() && password.isNotEmpty())
+                    navigator.push(SecondScreen())
+                else showMensaje = true
             }
-            Spacer(modifier = Modifier.height(16.dp))
-
-            AnimatedVisibility(showWelcome) {
-                Text("Bienvenido, $username", fontSize = 30.sp)
+            ) {
+                Text("Ingresar")
             }
         }
     }
+
 }
 
+class SecondScreen:Screen{
+
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
+        Column (
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Text("Bienvenido Segunda Pantalla", fontSize = 30.sp)
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = { navigator.push(LoginScreen())}) { Text("Salir")}
+        }
+    }
+}
