@@ -62,6 +62,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.transitions)
+            implementation(libs.voyager.tabNavigator)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)
