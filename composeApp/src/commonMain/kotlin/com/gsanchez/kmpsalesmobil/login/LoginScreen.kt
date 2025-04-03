@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.gsanchez.kmpsalesmobil.GetDeviceInformation
 import com.gsanchez.kmpsalesmobil.bottombar.BottomBarScreen
 
 class LoginScreen: Screen {
@@ -36,6 +37,7 @@ class LoginScreen: Screen {
         var showMensaje: Boolean by remember { mutableStateOf(false) }
         var username: String by remember { mutableStateOf("") }
         var password: String by remember { mutableStateOf("") }
+        val device = GetDeviceInformation().getDeviceInfo()
 
         Column (
             modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -72,6 +74,9 @@ class LoginScreen: Screen {
             ) {
                 Text("Ingresar")
             }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text("Dispositivo: $device")
         }
     }
 
