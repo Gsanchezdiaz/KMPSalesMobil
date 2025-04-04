@@ -44,6 +44,7 @@ class LoginScreen: Screen {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(36.dp))
             Text(text = "Acceso Seguro", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             Text(text = "Inicia sesion para ingresar a tu area de cliente", fontSize = 10.sp)
             Spacer(modifier = Modifier.height(16.dp))
